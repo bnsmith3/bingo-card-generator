@@ -26,7 +26,7 @@ def get_combinations(num_combs, num_entries, entries=[]):
             
     return choices
     
-def get_cards(num_cards, num_rows=5, entries=[], entries_file=None, card_file=None):
+def get_cards(num_cards, num_rows=5, title='Bingo Card', entries=[], entries_file=None, card_file=None):
     """
     Generate an html file that displays num_cards number of bingo cards.
 
@@ -40,6 +40,7 @@ def get_cards(num_cards, num_rows=5, entries=[], entries_file=None, card_file=No
     ----------
     num_cards: The number of cards to create
     num_rows: The number of rows and columns each card should have
+    title: The title to display at the top of the cards
     entries: List of items to use to make the cards
     entries_file: Name of the file that holds one item per line
     card_file: Name of the file to which to save the html file
@@ -97,10 +98,10 @@ def get_cards(num_cards, num_rows=5, entries=[], entries_file=None, card_file=No
         html += """
         <table>
         <thead>
-        <tr><th colspan="{}">XX Bingo Card</th></tr>
+        <tr><th colspan="{}">{}</th></tr>
         </thead>
         <tbody>
-        """.format(num_rows)
+        """.format(num_rows, title)
         item_count = 0
         for entry in card:
             if (item_count % num_rows) == 0:
@@ -136,13 +137,17 @@ if __name__ == '__main__':
                         default=5,
                         help='The number of rows each card should have; 5 is the'
                             ' default.')
-    parser.add_argument('--entries_file', '-e', action='store',
+    parser.add_argument('--title', '-t', action='store', default='Bingo Card',
+                        help='The title to display at the top of the cards. '
+                            ' \"Bingo Card\" is the default.')
+    parser.add_argument('--entries_file', '-e', action='store', required=True,
                         help='The file that holds the items to use to populate'
                             ' the generated cards.')
-    parser.add_argument('--card_file', '-f', action='store',
+    parser.add_argument('--card_file', '-f', action='store', required=True,
                         help='The file to which we will write the generated cards.')
     
     
     args = parser.parse_args()
-    a = get_cards(args.num_cards, args.num_rows, entries_file=args.entries_file, card_file=args.card_file)
+    a = get_cards(args.num_cards, args.num_rows, args.title, \
+                  entries_file=args.entries_file, card_file=args.card_file)
     
